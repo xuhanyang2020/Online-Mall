@@ -36,7 +36,6 @@ public class OrderServiceImp implements OrderService {
         orders.setTotal(0.0f);
         // create orders first as the order_id in orderlineitem referencing the order_id
         ordersDao.create(orders);
-        System.out.println(orders.getId());
         double total = 0.0;
         for (Map<String, Object> item : cart){
             Long goodsid = (Long) item.get("goodsid");
@@ -54,7 +53,6 @@ public class OrderServiceImp implements OrderService {
         }
 
         orders.setTotal(total);
-        System.out.println(orders.getId());
         ordersDao.modify(orders);
 
         return ordersid;
