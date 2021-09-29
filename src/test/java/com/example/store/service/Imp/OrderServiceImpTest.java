@@ -37,7 +37,7 @@ class OrderServiceImpTest {
         item2.put("quantity",3);
         cart.add(item2);
         String ordersid = service.submitOrders(cart);
-
+        System.out.println(1);
         assertNotNull(ordersid);
 
 
