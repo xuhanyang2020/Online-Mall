@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!doctype html>
 <html>
 <head>
@@ -8,9 +9,14 @@
 </head>
 
 <body>
-<div class="header">智捷网上电脑商城</div>
+<div class="header">UIUC电脑商城</div>
 <hr width="100%" />
-<form id="form1" name="form1" method="post" >
+<ul>
+  <c:forEach var="error" items="${errors}">
+    <li class="error">${error}</li>
+  </c:forEach>
+</ul>
+<form action="controller" method="post" >
   <table width="100%" align="center" >
     <tr height="40" >
       <td colspan="2" align="center"><strong>请您登录</strong></td>
@@ -26,12 +32,13 @@
     <tr height="40" >
       <td align="right">&nbsp;</td>
       <td ><input type="image" src="images/login_button.jpg" onclick="document.forms[0].fn.value='login'" />
-        &nbsp;&nbsp;&nbsp;&nbsp; <a href="#"><img src="images/reg_button.jpg" border="0" /></a></td>
+        &nbsp;&nbsp;&nbsp;&nbsp; <a href="customer_reg.jsp"><img src="images/reg_button.jpg" border="0" /></a></td>
     </tr>
   </table>
+  <input type="hidden" name="action" value="login">
 </form>
 <div class="footer">
   <hr  width="100%" />
-  Copyright © 智捷课堂 2008-2018. All Rights Reserved </div>
+  Copyright © daxia_xu 1998-2021. All Rights Reserved </div>
 </body>
 </html>
