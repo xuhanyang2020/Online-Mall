@@ -1,6 +1,7 @@
 package com.example.store.web;
 
 import com.example.store.domain.Customer;
+import com.example.store.domain.Goods;
 import com.example.store.service.*;
 import com.example.store.service.Imp.CustomerServiceImp;
 import com.example.store.service.Imp.GoodsServiceImp;
@@ -18,9 +19,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
 @WebServlet(name = "Controller", urlPatterns = "/controller")
@@ -112,6 +111,103 @@ public class Controller extends HttpServlet {
                 // set the information of the customer into the session
                 session.setAttribute("customer", customer);
                 req.getRequestDispatcher("main.jsp").forward(req, resp);
+            }
+        } else if (action.equals("list")){
+            List<Goods> goodsList = goodsService.queryAll();
+
+            if (goodsList.size() % pageSize == 0) {
+                totalPageNumber = goodsList.size() / pageSize;
+            } else {
+                totalPageNumber = goodsList.size() / pageSize + 1;
+            }
+
+            int start = (currentPage - 1) * pageSize;
+            int end = currentPage * pageSize;
+            if (currentPage == totalPageNumber){
+                end = goodsList.size();
+            }
+
+            req.setAttribute("totalPageNumber", totalPageNumber);
+            req.setAttribute("currentPage", currentPage);
+
+            req.setAttribute("goodsList", goodsList.subList(start, end));
+            req.getRequestDispatcher("goods_list.jsp").forward(req, resp);
+        } else if ("paging".equals(action)){
+            String page = req.getParameter("page");
+            if (page.equals("prev")){
+                currentPage--;
+                if (currentPage < 1){
+                    currentPage = 1;
+                }
+            } else if (page.equals("next")){
+                currentPage++;
+                if (currentPage > totalPageNumber){
+                    currentPage = totalPageNumber;
+                }
+            } else {
+                currentPage = Integer.valueOf(page);
+            }
+            int start = (currentPage - 1)  * pageSize;
+            int end = currentPage * pageSize;
+
+            List<Goods> list = goodsService.queryByStartEnd(start, end);
+            req.setAttribute("totalPageNumber", totalPageNumber);
+            req.setAttribute("currentPage", currentPage);
+            req.setAttribute("goodsList", list);
+            req.getRequestDispatcher("goods_list.jsp").forward(req, resp);
+        } else if (action.equals("detail")){
+            String goodsid = req.getParameter("goodsid");
+            Goods goods = goodsService.queryDetail(Long.parseLong(goodsid));
+
+            req.setAttribute("goods", goods);
+            req.getRequestDispatcher("goods_detail.jsp").forward(req, resp);
+        } else if (action.equals("add")){
+
+            Long goodsid = Long.parseLong(req.getParameter("id"));
+            String name = req.getParameter("name");
+            Float price = Float.valueOf(req.getParameter("price"));
+            List<Map<String, Object>> cart = (List<Map<String, Object>>) req.getSession().getAttribute("cart");
+
+            if (cart == null){
+                cart = new ArrayList<>();
+                req.getSession().setAttribute("cart", cart);
+            }
+            // goods already exists in the cart
+            boolean flag = false;
+            for (Map<String, Object> item : cart){
+                Long goodsid2 = (Long) item.get("goodsid");
+                if (goodsid2.equals(goodsid)){
+                    int quantity = (int) item.get("quantity");
+                    quantity++;
+                    item.put("quantity",quantity);
+                    flag = true;
+                    break;
+                }
+            }
+            if (!flag){
+                Map<String, Object> item = new HashMap<>();
+                item.put("goodsid", goodsid);
+                item.put("quantity",1);
+                cart.add(item);
+            }
+            System.out.println(cart);
+            String pagename = req.getParameter("pagename");
+            if (pagename.equals("list")) {
+                int start = (currentPage - 1) * pageSize;
+                int end = currentPage * pageSize;
+
+                List<Goods> goodsList = goodsService.queryByStartEnd(start, end);
+
+                req.setAttribute("totalPageNumber", totalPageNumber);
+                req.setAttribute("currentPage", currentPage);
+                req.setAttribute("goodsList", goodsList);
+                req.getRequestDispatcher("goods_list.jsp").forward(req, resp);
+
+            } else if (pagename.equals("detail")) {
+
+                Goods goods = goodsService.queryDetail(new Long(goodsid));
+                req.setAttribute("goods", goods);
+                req.getRequestDispatcher("goods_detail.jsp").forward(req, resp);
             }
         }
     }

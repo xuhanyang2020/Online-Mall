@@ -14,51 +14,48 @@
 </style>
 </head>
 <body>
-<table width="100%" border="0" align="center">
-  <tr>
-    <td width="616"><img src="images/info.jpg" align="absmiddle" /></td>
-    <td width="734" align="right"><img src="images/mycar1.jpg"align="absmiddle"/> <a href="Cart.html">&nbsp;购物车</a> | <a href="zhanghu.html">我的帐户</a> | <a href="Catalog.html">商品列表</a></td>
-  </tr>
-</table>
+<jsp:include page="goods_head.jsp" flush="true">
+  <jsp:param name="image" value="info.jpg"/>
+</jsp:include>
 <hr width="100%" />
-<div class="text3" align="center">戴尔(DELL)成就3470高性能商用办公台式电脑整机</div>
+<div class="text3" align="center">${goods.description}</div>
 <table width="100%" border="0" align="center">
   <tr>
-    <td width="40%" align="right"><div><img src="goods_images/5ae00211N25afad2c.jpg" width="360px" height="360px" /></div>
+    <td width="40%" align="right"><div><img src="goods_images/${goods.image}" width="360px" height="360px" /></div>
       <br></td>
-    <td><div align="center" class="text4">一 口 价：<span class="title">￥63,660.00元</span></div>
+    <td><div align="center" class="text4">Price：<span class="title">$${goods.price}</span></div>
       <br>
       <table width="80%" height="200" border="0">
         <tbody>
           <tr>
             <td  width="25%" class="text5" >电脑品牌：</td>
-            <td width="25%" class="text6" > 酷耶（Cooyes）</td>
+            <td width="25%" class="text6" > ${goods.brand}</td>
             <td width="25%" class="text5" >CPU品牌：</td>
-            <td width="25%" class="text6" >Intel</td>
+            <td width="25%" class="text6" >${goods.cpuBrand}</td>
           </tr>
           <tr>
             <td class="text5" >内存容量：</td>
-            <td class="text6" >Intel</td>
+            <td class="text6" >${goods.memoryCapacity}</td>
             <td class="text5" >CPU型号：</td>
-            <td class="text6" >Intel i5</td>
+            <td class="text6" >${goods.cpuType}</td>
           </tr>
           <tr>
             <td class="text5" >硬盘容量：</td>
-            <td class="text6" >&nbsp;</td>
+            <td class="text6" >${goods.hdCapacity}</td>
             <td class="text5" >显卡类型：</td>
-            <td class="text6" >&nbsp;</td>
+            <td class="text6" >${goods.cardModel}</td>
           </tr>
           <tr>
             <td class="text5" >显示器尺寸：</td>
-            <td class="text6" >&nbsp;</td>
-            <td class="text5" >&nbsp;</td>
-            <td class="text6" >&nbsp;</td>
+            <td class="text6" >${goods.displaysize}</td>
+            <td class="text5" ></td>
+            <td class="text6" ></td>
           </tr>
         </tbody>
       </table>
       <br>
       <br>
-      <!--<div><a href="Catalog.html"><img src="images/button.jpg" ></div></td>-->>
+      <div><a href="controller?action=add&pagename=detail&id=${goods.id}&name=${goods.name}&price=${goods.price}"><img src="images/button.jpg"/></a></div>
   </tr>
 </table>
 <div class="footer">
