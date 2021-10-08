@@ -32,10 +32,10 @@ a:hover {
 <hr width="100%" />
 <div align="center" >
   <p class="text7"> 谢谢您的购物！ </p>
-  <p class="text7"> 您的订单号是： </p>
+  <p class="text7"> 您的订单号是：${orderid} </p>
   <p class="text7"> 您可以继续购物！ </p>
    <p class="text7">
-       <a href="Catalog.html">返回主页面</a>
+       <a href="main.jsp">返回主页面</a>
   </p>
 </div>
 

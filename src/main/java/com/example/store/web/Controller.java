@@ -188,6 +188,8 @@ public class Controller extends HttpServlet {
                 Map<String, Object> item = new HashMap<>();
                 item.put("goodsid", goodsid);
                 item.put("quantity",1);
+                item.put("goodsname", name);
+                item.put("price", price);
                 cart.add(item);
             }
             System.out.println(cart);
@@ -209,6 +211,46 @@ public class Controller extends HttpServlet {
                 req.setAttribute("goods", goods);
                 req.getRequestDispatcher("goods_detail.jsp").forward(req, resp);
             }
+        } else if (action.equals("cart")){
+            List<Map<String, Object>> cart = (List<Map<String, Object>>) req.getSession().getAttribute("cart");
+            double total = 0.0;
+            if (cart != null){
+                for (Map<String, Object> item: cart){
+
+                    Integer quantity = (Integer) item.get("quantity");
+                    Float price = (Float) item.get("price");
+                    double subtotal = price * quantity;
+                    total += subtotal;
+                }
+            }
+            req.setAttribute("total", total);
+            req.getRequestDispatcher("cart.jsp").forward(req, resp);
+        } else if (action.equals("submit")){
+            List<Map<String, Object>> cart = (List<Map<String, Object>>) req.getSession().getAttribute("cart");
+            for (Map<String, Object> item: cart){
+                Long goodsid = (Long) item.get("goodsid");
+                String strquantity = req.getParameter("quantity_" + goodsid);
+                int quantity = 0;
+                try {
+                    quantity = Integer.parseInt(strquantity);
+                } catch (Exception e) {
+                }
+
+                item.put("quantity", quantity);
+            }
+
+            String orderid = ordersService.submitOrders(cart);
+            req.setAttribute("orderid",orderid);
+            req.getRequestDispatcher("order_finish.jsp").forward(req, resp);
+            req.getSession().removeAttribute("cart");
+        } else if (action.equals("main")){
+            req.getRequestDispatcher("main.jsp").forward(req, resp);
+        } else if (action.equals("logout")){
+            req.getSession().removeAttribute("customer");
+            req.getSession().removeAttribute("cart");
+            req.getRequestDispatcher("login.jsp").forward(req, resp);
+        } else if (action.equals("reg_init")){
+            req.getRequestDispatcher("customer").forward(req, resp);
         }
     }
 
